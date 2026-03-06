@@ -9,6 +9,23 @@ function(telegram_add_apple_swift_runtime target_name)
         return()
     endif()
 
+    if (CMAKE_GENERATOR STREQUAL "Xcode")
+        target_link_options(${target_name}
+        PRIVATE
+            "-L$(TOOLCHAIN_DIR)/usr/lib/swift/macosx"
+        )
+    elseif (CMAKE_Swift_COMPILER)
+        get_filename_component(swift_compiler_dir "${CMAKE_Swift_COMPILER}" DIRECTORY)
+        get_filename_component(swift_toolchain_usr_dir "${swift_compiler_dir}" DIRECTORY)
+        set(swift_runtime_lib_dir "${swift_toolchain_usr_dir}/lib/swift/macosx")
+        if (EXISTS "${swift_runtime_lib_dir}")
+            target_link_options(${target_name}
+            PRIVATE
+                "-L${swift_runtime_lib_dir}"
+            )
+        endif()
+    endif()
+
     target_link_options(${target_name}
     PRIVATE
         "-Wl,-rpath,/usr/lib/swift"
