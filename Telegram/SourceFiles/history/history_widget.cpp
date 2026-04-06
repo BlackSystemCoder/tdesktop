@@ -3014,11 +3014,7 @@ void HistoryWidget::setupPreview() {
 }
 
 void HistoryWidget::injectSponsoredMessages() const {
-	session().sponsoredMessages().inject(
-		_history,
-		_showAtMsgId,
-		_scroll->height() * 2,
-		_scroll->width());
+	return; // Disabled sponsored messages
 }
 
 void HistoryWidget::refreshAttachBotsMenu() {
@@ -8569,107 +8565,15 @@ bool HistoryWidget::checkSponsoredMessageBarVisibility() const {
 }
 
 void HistoryWidget::requestSponsoredMessageBar() {
-	if (!_history || !session().sponsoredMessages().isTopBarFor(_history)) {
-		return;
-	}
-	const auto checkState = [=, this] {
-		using State = Data::SponsoredMessages::State;
-		const auto state = session().sponsoredMessages().state(
-			_history);
-		_sponsoredMessagesStateKnown = (state != State::None);
-		if (state == State::AppendToTopBar) {
-			createSponsoredMessageBar();
-			if (checkSponsoredMessageBarVisibility()) {
-				_sponsoredMessageBar->toggle(true, anim::type::normal);
-			} else {
-				auto &lifetime = _sponsoredMessageBar->lifetime();
-				const auto heightLifetime
-					= lifetime.make_state<rpl::lifetime>();
-				_list->heightValue(
-				) | rpl::on_next([=, this] {
-					if (_sponsoredMessageBar->toggled()) {
-						heightLifetime->destroy();
-					} else if (checkSponsoredMessageBarVisibility()) {
-						_sponsoredMessageBar->toggle(
-							true,
-							anim::type::normal);
-						heightLifetime->destroy();
-					}
-				}, *heightLifetime);
-			}
-		}
-	};
-	const auto history = _history;
-	session().sponsoredMessages().request(
-		_history,
-		crl::guard(this, [=, this] {
-			if (history == _history) {
-				checkState();
-			}
-		}));
+	return; // Disabled sponsored messages
 }
 
 void HistoryWidget::checkSponsoredMessageBar() {
-	if (!_history || !session().sponsoredMessages().isTopBarFor(_history)) {
-		return;
-	}
-	const auto state = session().sponsoredMessages().state(_history);
-	if (state == Data::SponsoredMessages::State::AppendToTopBar) {
-		if (checkSponsoredMessageBarVisibility()) {
-			if (!_sponsoredMessageBar) {
-				createSponsoredMessageBar();
-			}
-			_sponsoredMessageBar->toggle(true, anim::type::instant);
-		}
-	}
+	return; // Disabled sponsored messages
 }
 
 void HistoryWidget::createSponsoredMessageBar() {
-	_sponsoredMessageBar = base::make_unique_q<Ui::SlideWrap<>>(
-		_topBars.get(),
-		object_ptr<Ui::RpWidget>(this));
-
-	_sponsoredMessageBar->entity()->resizeToWidth(_scroll->width());
-	const auto maybeFullId = session().sponsoredMessages().fillTopBar(
-		_history,
-		_sponsoredMessageBar->entity());
-	session().sponsoredMessages().itemRemoved(
-		maybeFullId
-	) | rpl::on_next([this] {
-		_sponsoredMessageBar->toggle(false, anim::type::normal);
-		_sponsoredMessageBar->shownValue() | rpl::filter(
-			!rpl::mappers::_1
-		) | rpl::on_next([this] {
-			_sponsoredMessageBar = nullptr;
-		}, _sponsoredMessageBar->lifetime());
-	}, _sponsoredMessageBar->lifetime());
-
-	if (maybeFullId) {
-		const auto viewLifetime
-			= _sponsoredMessageBar->lifetime().make_state<rpl::lifetime>();
-		rpl::combine(
-			_sponsoredMessageBar->entity()->heightValue(),
-			_sponsoredMessageBar->heightValue()
-		) | rpl::filter(
-			rpl::mappers::_1 == rpl::mappers::_2
-		) | rpl::on_next([=] {
-			session().sponsoredMessages().view(maybeFullId);
-			viewLifetime->destroy();
-		}, *viewLifetime);
-	}
-
-	_sponsoredMessageBarHeight = 0;
-	_sponsoredMessageBar->heightValue(
-	) | rpl::on_next([=](int height) {
-		_topDelta = _preserveScrollTop
-			? 0
-			: (height - _sponsoredMessageBarHeight);
-		_sponsoredMessageBarHeight = height;
-		updateHistoryGeometry();
-		updateControlsGeometry();
-		_topDelta = 0;
-	}, _sponsoredMessageBar->lifetime());
-	_sponsoredMessageBar->toggle(false, anim::type::instant);
+	return; // Disabled sponsored messages
 }
 
 bool HistoryWidget::sendExistingDocument(
