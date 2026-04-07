@@ -1791,12 +1791,10 @@ void OverlayWidget::refreshVoteButton() {
 		return;
 	}
 	if (!_voteButton) {
-		using TextTransform = Ui::RoundButton::TextTransform;
 		_voteButton.create(
 			_body,
 			tr::lng_polls_submit_votes(),
 			st::mediaviewVoteButton);
-		_voteButton->setTextTransform(TextTransform::NoTransform);
 		const auto effect = Ui::CreateChild<QGraphicsOpacityEffect>(
 			_voteButton.data());
 		effect->setOpacity(_controlsOpacity.current());
@@ -4907,12 +4905,10 @@ void OverlayWidget::initThemePreview() {
 			_themePreviewId = 0;
 			_themePreview = std::move(result);
 			if (_themePreview) {
-				using TextTransform = Ui::RoundButton::TextTransform;
 				_themeApply.create(
 					_body,
 					tr::lng_theme_preview_apply(),
 					st::themePreviewApplyButton);
-				_themeApply->setTextTransform(TextTransform::NoTransform);
 				_themeApply->show();
 				_themeApply->setClickedCallback([=] {
 					const auto &object = Background()->themeObject();
@@ -4929,7 +4925,6 @@ void OverlayWidget::initThemePreview() {
 					_body,
 					tr::lng_cancel(),
 					st::themePreviewCancelButton);
-				_themeCancel->setTextTransform(TextTransform::NoTransform);
 				_themeCancel->show();
 				_themeCancel->setClickedCallback([this] { close(); });
 				if (const auto slug = _themeCloudData.slug; !slug.isEmpty()) {
@@ -4937,7 +4932,6 @@ void OverlayWidget::initThemePreview() {
 						_body,
 						tr::lng_theme_share(),
 						st::themePreviewCancelButton);
-					_themeShare->setTextTransform(TextTransform::NoTransform);
 					_themeShare->show();
 					_themeShare->setClickedCallback([=] {
 						QGuiApplication::clipboard()->setText(
