@@ -7,10 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "ui/controls/compose_ai_button_factory.h"
 
-#include "base/options.h"
 #include "boxes/compose_ai_box.h"
 #include "history/view/controls/history_view_compose_ai_button.h"
-#include "history/view/controls/history_view_compose_controls.h"
 #include "lang/lang_keys.h"
 #include "main/main_app_config.h"
 #include "main/main_session.h"
@@ -25,9 +23,6 @@ bool HasEnoughLinesForAi(
 		not_null<Main::Session*> session,
 		not_null<Ui::InputField*> field) {
 	if (session->appConfig().aiComposeStyles().empty()) {
-		return false;
-	}
-	if (!base::options::lookup<bool>(HistoryView::kOptionAiEditor).value()) {
 		return false;
 	}
 	const auto &style = field->st().style;

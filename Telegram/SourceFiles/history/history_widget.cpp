@@ -15,9 +15,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_sending.h"
 #include "api/api_send_progress.h"
 #include "api/api_unread_things.h"
-#include "base/options.h"
 #include "base/random.h"
-#include "history/view/controls/history_view_compose_controls.h"
 #include "boxes/compose_ai_box.h"
 #include "ui/boxes/confirm_box.h"
 #include "boxes/delete_messages_box.h"
@@ -6246,8 +6244,7 @@ bool HistoryWidget::fieldOrDisabledShown() const {
 bool HistoryWidget::hasEnoughLinesForAi() const {
 	if (!_history
 		|| _voiceRecordBar->isActive()
-		|| session().appConfig().aiComposeStyles().empty()
-		|| !base::options::lookup<bool>(HistoryView::kOptionAiEditor).value()) {
+		|| session().appConfig().aiComposeStyles().empty()) {
 		return false;
 	}
 	const auto &style = _field->st().style;
