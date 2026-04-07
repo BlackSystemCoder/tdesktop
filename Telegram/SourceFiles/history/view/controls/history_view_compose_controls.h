@@ -547,4 +547,6 @@ void ShowPhotoEditSpoilerMenu(
 	not_null<HistoryItem*> item,
 	bool spoiler);
 
+extern const char kOptionAiEditor[];
+
 } // namespace HistoryView

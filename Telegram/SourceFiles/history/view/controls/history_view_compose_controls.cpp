@@ -9,6 +9,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "base/call_delayed.h"
 #include "base/event_filter.h"
+#include "base/options.h"
 #include "base/platform/base_platform_info.h"
 #include "base/qt_signal_producer.h"
 #include "base/random.h"
@@ -144,6 +145,15 @@ using VoiceRecordBar = Controls::VoiceRecordBar;
 using ForwardPanel = Controls::ForwardPanel;
 
 } // namespace
+
+base::options::toggle AiEditor({
+	.id = kOptionAiEditor,
+	.name = "Enable AI Editor",
+	.description = "Show AI editor button for long messages in compose field.",
+	.defaultValue = false,
+});
+
+const char kOptionAiEditor[] = "ai-editor";
 
 const ChatHelpers::PauseReason kDefaultPanelsLevel
 	= ChatHelpers::PauseReason::TabbedPanel;
@@ -3642,7 +3652,8 @@ bool ComposeControls::canSendAiComposeDirect() const {
 bool ComposeControls::hasEnoughLinesForAi() const {
 	if (!_history
 		|| _recording.current()
-		|| session().appConfig().aiComposeStyles().empty()) {
+		|| session().appConfig().aiComposeStyles().empty()
+		|| !base::options::lookup<bool>(kOptionAiEditor).value()) {
 		return false;
 	}
 	const auto &style = _field->st().style;
